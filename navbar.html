@@ -1,0 +1,118 @@
+<nav class="market-navbar">
+
+  <div class="market-navbar__container">
+    <div class="market-navbar__logo" onclick="window.location.href='index.html'">
+      <img src="EKD logo.jpeg" alt="CampusMart Logo" class="market-navbar__logo-img" />
+      <span class="market-navbar__brand">CampusMart</span>
+    </div>
+    <div class="market-navbar__searchbar">
+      <select class="market-navbar__select" id="categoryFilter" aria-label="Category">
+        <option value="All">All</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Books">Books</option>
+        <option value="Calculators">Calculators</option>
+        <option value="Stationery">Stationery</option>
+        <option value="Laptops">Laptops</option>
+        <option value="Smartphones">Smartphones</option>
+        <option value="Gaming">Gaming</option>
+        <option value="Beauty">Beauty</option>
+        <option value="Pets">Pets</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Accessories">Accessories</option>
+        <option value="Home Essentials">Home Essentials</option>
+        <option value="Art & Craft">Art & Craft</option>
+        <option value="Furniture">Furniture</option>
+        <option value="Sports">Sports</option>
+        <option value="Music">Music</option>
+        <option value="Kitchen">Kitchen</option>
+        <option value="Toys">Toys</option>
+        <option value="Other">Other</option>
+      </select>
+      <div class="market-navbar__search-wrapper">
+        <input type="text" class="market-navbar__search" id="searchInput" placeholder="Search products..." aria-label="Search products">
+        <!-- <button class="market-navbar__search-btn" id="navbarSearchBtn" aria-label="Search"><i class="fa fa-search"></i></button> -->
+      </div>
+    </div>
+    <ul class="market-navbar__links" id="marketNavbarLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#shopSection">Shop</a></li>
+      <li><a href="#sell">Sell</a></li>
+      <!-- <li><a href="#" id="profileNav">Profile</a></li> -->
+    </ul>
+    <div class="market-navbar__actions">
+      <button id="adminLoginBtn" class="market-navbar__btn market-navbar__btn--admin" title="Admin" aria-label="Admin"><i class="fa fa-user-shield"></i></button>
+      <div class="market-navbar__cart" onclick="window.location.href='cart.html'" title="Cart" aria-label="Cart">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <!-- <span id="cart-count" class="market-navbar__cart-badge"></span> -->
+      </div>
+      <span id="userEmail" style="display:none; color: #ebece7;" ></span>
+      <button id="navbarLoginBtn" class="market-navbar__btn">Login</button>
+      <button id="logoutBtn" class="market-navbar__btn" style="display:none;">Logout</button>
+      <div id="recaptcha-container"></div>
+    </div>
+    <button class="market-navbar__hamburger" id="marketNavbarHamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<!-- Mobile Tray for 400px-700px -->
+<div class="mobile-tray" id="mobileTray">
+  <button class="tray-close-btn" id="trayCloseBtn">&times;</button>
+  <div class="tray-section" id="trayUserId">Your ID is - <span id="trayUserEmail"></span></div>
+  <button class="tray-btn" id="trayAdminBtn"><i class="fa fa-user-shield"></i> Admin</button>
+  <button class="tray-btn" id="trayCartBtn"><i class="fa fa-cart-shopping"></i> Cart</button>
+  <button class="tray-btn" id="trayLoginBtn"><i class="fa fa-sign-in-alt"></i> Login</button>
+  <button class="tray-btn" id="trayLogoutBtn" style="display:none;"><i class="fa fa-sign-out-alt"></i> Logout</button>
+</div>
+<script>
+// Hamburger menu logic for mobile and tray
+(function() {
+  const hamburger = document.getElementById('marketNavbarHamburger');
+  const tray = document.getElementById('mobileTray');
+  const trayClose = document.getElementById('trayCloseBtn');
+  hamburger.addEventListener('click', () => tray.classList.add('open'));
+  trayClose.addEventListener('click', () => tray.classList.remove('open'));
+  // Fill user ID (update this with your auth logic)
+  function updateTrayUserId(email) {
+    document.getElementById('trayUserEmail').textContent = email || 'Not logged in';
+  }
+  // Example: updateTrayUserId(currentUser?.email);
+  // Tray button actions
+  document.getElementById('trayAdminBtn').onclick = () => {
+    const modal = document.getElementById('adminLoginModal');
+    if(modal) modal.style.display = 'block';
+    tray.classList.remove('open');
+  };
+  document.getElementById('trayCartBtn').onclick = () => {
+    window.location.href = 'cart.html';
+    tray.classList.remove('open');
+  };
+  // Login/Logout logic
+  const trayLoginBtn = document.getElementById('trayLoginBtn');
+  const trayLogoutBtn = document.getElementById('trayLogoutBtn');
+  function updateTrayAuthButtons() {
+    const user = window.currentUser || (window.firebaseAuth && window.firebaseAuth.currentUser);
+    if (user) {
+      trayLoginBtn.style.display = 'none';
+      trayLogoutBtn.style.display = 'block';
+      updateTrayUserId(user.email);
+    } else {
+      trayLoginBtn.style.display = 'block';
+      trayLogoutBtn.style.display = 'none';
+      updateTrayUserId();
+    }
+  }
+  trayLoginBtn.onclick = function() {
+    const modal = document.getElementById('loginModal');
+    if(modal) modal.style.display = 'block';
+    tray.classList.remove('open');
+  };
+  trayLogoutBtn.onclick = function() {
+    if(window.signOut) window.signOut();
+    else if(window.firebaseAuth && window.firebaseAuth.signOut) window.firebaseAuth.signOut();
+    tray.classList.remove('open');
+  };
+  // Listen for auth changes (polling, or you can hook into your auth events)
+  setInterval(updateTrayAuthButtons, 700);
+})();
+</script>
