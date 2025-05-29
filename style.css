@@ -282,7 +282,7 @@ body {
     font-size: 0.9rem;
   }
 }
-@media (min-width: 400px) and (max-width: 700px) {
+@media (min-width: 300px) and (max-width: 700px) {
   .market-navbar__container {
     flex-wrap: wrap;
     padding: 0 8px;
@@ -629,7 +629,7 @@ body {
   font-weight: bold;
 }
 
-@media (min-width: 400px) and (max-width: 1000px) {
+@media (min-width: 300px) and (max-width: 1000px) {
   #gridProducts {
     display: flex;
     flex-direction: row;
